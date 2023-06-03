@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 public interface ClientService {
+
         void createUser(ClientDto userDto);
 
         Optional<ClientEntity> findUserById(Long id);

@@ -1,11 +1,14 @@
 package br.com.internetbanking.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 @Table(name = "client")
+@Data
 public class ClientEntity {
 
     @Id
