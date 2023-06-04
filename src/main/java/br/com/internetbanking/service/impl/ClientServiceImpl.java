@@ -7,6 +7,7 @@ import br.com.internetbanking.exeption.BusinessException;
 import br.com.internetbanking.repository.ClientRepository;
 import br.com.internetbanking.service.ClientService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -47,25 +48,54 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Optional<ClientEntity> findUserById(Long id) {
-        return Optional.empty();
+    public ResponseEntity<ClientEntity> findUserById(Long id) {
+        try {
+            Optional<ClientEntity> clientOptional = clientRepository.findById(id);
+            if (!clientOptional.isPresent()) {
+                throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema!");
+            }
+            ClientEntity client = clientOptional.get();
+            return ResponseEntity.ok(client);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema!");
+        }
     }
+
 
     @Override
-    public ResponseEntity<ClientEntity> updateUser(long id) {
-        return null;
+    public ResponseEntity<String> updateCustumerById(ClientDto form, Long id) {
+        try {
+            ClientEntity existingClient = clientRepository.findById(id)
+                    .orElseThrow(() -> new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema!"));
+
+            // Atualizar os campos do cliente com base nos dados do form
+            existingClient.setName(form.getName());
+            existingClient.setBirthday(form.getBirthday());
+            existingClient.setAmount(form.getAmount());
+            existingClient.setAccountNumber(form.getAccountNumber());
+            existingClient.setExecutivePlan(form.getExecutivePlan());
+
+            // Salvar as alterações no banco de dados
+            clientRepository.save(existingClient);
+
+            return ResponseEntity.ok("Cliente atualizado com sucesso");
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar cliente: " + e.getMessage());
+        }
     }
+
+
 
     @Override
-    public ClientDto updateByUserId(UpdatedClientDTO form, Long id) {
-        return null;
+    public ResponseEntity<String> deleteById(Long id) {
+            if (clientRepository.existsById(id)) {
+                clientRepository.deleteById(id);
+                return ResponseEntity.ok("Cliente removido com sucesso");
+            } else {
+                throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema");
+            }
     }
 
-
-    @Override
-    public void deleteById(Long id) {
-
-    }
 
     @Override
     public void isExistentClient(ClientRepository clientRepository, ClientDto clientDto) throws BusinessException {

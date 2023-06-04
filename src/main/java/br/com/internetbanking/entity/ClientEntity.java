@@ -29,4 +29,6 @@ public class ClientEntity {
 
     @Column(name = "birthday", nullable = false)
     private Date birthday;
+
+
 }
