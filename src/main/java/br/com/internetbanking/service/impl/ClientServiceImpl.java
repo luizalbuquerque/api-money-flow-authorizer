@@ -24,7 +24,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void createUser(ClientDto clientDto) {
+    public void createClient(ClientDto clientDto) {
+
+        isExistentClient(clientRepository, clientDto);
+
+        // Validação, troca feita pela chamada de método reutilizável acima.
+//        if (clientRepository.existsByName(clientDto.getName())) {
+//            throw new BusinessException("Cliente " + clientDto.getName() + " já cadastrado no sistema.");
+//        }
 
         try {
             ClientEntity clientEntity = new ClientEntity();
@@ -37,7 +44,6 @@ public class ClientServiceImpl implements ClientService {
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(DUPLICATE_USER);
         }
-
     }
 
     @Override
@@ -60,4 +66,13 @@ public class ClientServiceImpl implements ClientService {
     public void deleteById(Long id) {
 
     }
-}
+
+    @Override
+    public void isExistentClient(ClientRepository clientRepository, ClientDto clientDto) throws BusinessException {
+            if (clientRepository.existsByName(clientDto.getName())) {
+                throw new BusinessException("Cliente " + clientDto.getName() + " já cadastrado no sistema!");
+            }
+        }
+    }
+
+
