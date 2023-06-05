@@ -20,11 +20,11 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/deposit")
-    public ResponseEntity<String> deposit(@RequestBody TransactionDTO transactionDTO) {
+    @PostMapping
+    public ResponseEntity<String> save(@RequestBody TransactionDTO transactionDTO) {
         try {
-            transactionService.deposit(transactionDTO);
-            return ResponseEntity.ok("Depósito realizado com sucesso no valor de: " + transactionDTO.getAmount());
+            transactionService.newTransaction(transactionDTO);
+            return ResponseEntity.ok("Depósito realizado com sucesso no valor de: " + transactionDTO.getValue());
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body("Erro ao realizar depósito: " + e.getMessage());
         }

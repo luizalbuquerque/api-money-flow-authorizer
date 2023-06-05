@@ -1,6 +1,8 @@
 package br.com.internetbanking.entity;
 
 import br.com.internetbanking.enun.TransactionType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,10 +28,9 @@ public class TransactionEntity {
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;
-
-
 
 }

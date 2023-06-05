@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public class TransactionDTO {
 
     private Long id;
-    private Long accountId;
+    private String accountNumber;
     private TransactionType type;
-    private BigDecimal amount;
+    private BigDecimal value;
     private LocalDateTime transactionDate;
 
 }

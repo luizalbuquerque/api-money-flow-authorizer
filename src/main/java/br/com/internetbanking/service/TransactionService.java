@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TransactionService {
 
-    void deposit(TransactionDTO transactionDTO);
+    void newTransaction(TransactionDTO transactionDTO);
 
     ResponseEntity<List<TransactionEntity>> getAllTransactions();
 

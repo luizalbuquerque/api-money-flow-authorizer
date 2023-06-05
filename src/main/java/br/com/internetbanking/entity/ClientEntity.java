@@ -1,5 +1,8 @@
 package br.com.internetbanking.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -31,6 +34,7 @@ public class ClientEntity {
     @Column(name = "birthday", nullable = false)
     private Date birthday;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TransactionEntity> transactions = new ArrayList<>();
 

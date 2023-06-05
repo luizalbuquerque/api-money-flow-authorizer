@@ -84,24 +84,26 @@ public class ClientServiceImpl implements ClientService {
     }
 
 
-
     @Override
     public ResponseEntity<String> deleteById(Long id) {
-            if (clientRepository.existsById(id)) {
-                clientRepository.deleteById(id);
-                return ResponseEntity.ok("Cliente removido com sucesso");
-            } else {
-                throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema");
-            }
+        if (clientRepository.existsById(id)) {
+            clientRepository.deleteById(id);
+            return ResponseEntity.ok("Cliente removido com sucesso");
+        } else {
+            throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema");
+        }
     }
 
 
     @Override
     public void isExistentClient(ClientRepository clientRepository, ClientDto clientDto) throws BusinessException {
-            if (clientRepository.existsByName(clientDto.getName())) {
-                throw new BusinessException("Cliente " + clientDto.getName() + " já cadastrado no sistema!");
-            }
+        if (clientRepository.existsByName(clientDto.getName())) {
+            throw new BusinessException("Cliente " + clientDto.getName() + " já cadastrado no sistema!");
+        }
+        if (clientRepository.existsByAccountNumber(clientDto.getAccountNumber())) {
+            throw new BusinessException("Conta " + clientDto.getAccountNumber() + " já cadastrada no sistema!");
         }
     }
+}
 
 
