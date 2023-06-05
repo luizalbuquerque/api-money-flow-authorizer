@@ -1,7 +1,6 @@
 package br.com.internetbanking.service.impl;
 
 import br.com.internetbanking.dto.ClientDto;
-import br.com.internetbanking.dto.UpdatedClientDTO;
 import br.com.internetbanking.entity.ClientEntity;
 import br.com.internetbanking.exeption.BusinessException;
 import br.com.internetbanking.repository.ClientRepository;
