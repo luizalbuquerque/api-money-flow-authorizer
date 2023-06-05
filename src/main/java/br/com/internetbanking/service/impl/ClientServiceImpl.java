@@ -28,11 +28,6 @@ public class ClientServiceImpl implements ClientService {
 
         isExistentClient(clientRepository, clientDto);
 
-        // Validação, troca feita pela chamada de método reutilizável acima.
-//        if (clientRepository.existsByName(clientDto.getName())) {
-//            throw new BusinessException("Cliente " + clientDto.getName() + " já cadastrado no sistema.");
-//        }
-
         try {
             ClientEntity clientEntity = new ClientEntity();
             clientEntity.setName(clientDto.getName());

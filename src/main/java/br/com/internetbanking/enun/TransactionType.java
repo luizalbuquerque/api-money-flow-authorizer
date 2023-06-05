@@ -1,5 +1,7 @@
 package br.com.internetbanking.enun;
 
+
+
 public enum TransactionType {
 
     WITHDRAWAL("Saque"),
@@ -15,4 +17,6 @@ public enum TransactionType {
     public String getDescription() {
         return description;
     }
+
+
 }

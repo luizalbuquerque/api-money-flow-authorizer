@@ -16,4 +16,8 @@ public class TransactionDTO {
     private BigDecimal value;
     private LocalDateTime transactionDate;
 
+    public TransactionType getTransactionType() {
+        return this.type;
+    }
+
 }

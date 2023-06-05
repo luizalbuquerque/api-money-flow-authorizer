@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,42 +29,6 @@ public class TransactionServiceImpl implements TransactionService {
         this.clientRepository = clientRepository;
         this.transactionRepository = transactionRepository;
     }
-
-// VERSÂO DEPOSIT
-//    public void newTransaction(TransactionDTO request) {
-//
-//        ClientEntity client = clientRepository.findByAccountNumber(request.getAccountNumber())
-//                .orElseThrow(() -> new IllegalArgumentException("Client not found."));
-//
-//        // Updating balance
-//        BigDecimal newBalance = client.getAmount().add(request.getValue());
-//        client.setAmount(newBalance);
-//
-//        // Creating a new transaction
-//        TransactionEntity transaction = new TransactionEntity();
-//        transaction.setType(TransactionType.DEPOSIT);
-//        transaction.setValue(request.getValue());
-//        transaction.setTransactionDate(LocalDateTime.now());
-//        transaction.setClient(client);
-//
-//        transactionRepository.save(transaction);
-//
-//        // Retrieve all transactions for the client
-//        List<TransactionEntity> transactionList = client.getTransactions();
-//        if (transactionList == null) {
-//            transactionList = new ArrayList<>();
-//        }
-//
-//        // Add the new deposit transaction to the list
-//        transactionList.add(transaction);
-//
-//
-//        //Update the client's transaction list
-//        client.setTransactions(transactionList);
-//        clientRepository.save(client);
-//
-//    }
-
 
     public void newTransaction(TransactionDTO request) {
         ClientEntity client = getClientByAccountNumber(request.getAccountNumber());
@@ -95,7 +61,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     private TransactionEntity createTransaction(TransactionDTO request, ClientEntity client) {
         TransactionEntity transaction = new TransactionEntity();
-        transaction.setType(TransactionType.DEPOSIT);
+        if(request.getTransactionType().equals(TransactionType.DEPOSIT)){
+            transaction.setType(TransactionType.DEPOSIT);
+            transaction.setValue(request.getValue());
+            transaction.setTransactionDate(LocalDateTime.now());
+            transaction.setClient(client);
+            return transaction;
+        }
+        transaction.setType(TransactionType.WITHDRAWAL);
         transaction.setValue(request.getValue());
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setClient(client);
@@ -141,9 +114,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-    @Override
-    public ResponseEntity<List<TransactionEntity>> getAllTransactions() {
-        return null;
+    public List<TransactionEntity> getTransactionsByDate(LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return transactionRepository.findByTransactionDateBetween(startOfDay, endOfDay);
     }
 
 }
