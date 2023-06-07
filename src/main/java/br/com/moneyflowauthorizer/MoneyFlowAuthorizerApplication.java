@@ -6,12 +6,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@OpenAPIDefinition(info = @Info(title = "Internet Banking Santander", version = "1.0.0"))
+@OpenAPIDefinition(info = @Info(title = "Money Flow Authorizer", version = "1.0.0"))
 @SpringBootApplication
-public class InternetBankingApplication {
+public class MoneyFlowAuthorizerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InternetBankingApplication.class, args);
+		SpringApplication.run(MoneyFlowAuthorizerApplication.class, args);
 	}
 
 }

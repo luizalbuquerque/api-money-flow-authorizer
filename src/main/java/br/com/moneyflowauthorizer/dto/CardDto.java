@@ -1,4 +1,4 @@
-package br.com.internetbanking.dto;
+package br.com.moneyflowauthorizer.dto;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;

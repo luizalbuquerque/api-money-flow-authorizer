@@ -1,10 +1,10 @@
-package br.com.internetbanking.controller;
+package br.com.moneyflowauthorizer.controller;
 
-import br.com.internetbanking.dto.ClientDto;
-import br.com.internetbanking.entity.ClientEntity;
-import br.com.internetbanking.exeption.BusinessException;
-import br.com.internetbanking.repository.ClientRepository;
-import br.com.internetbanking.service.ClientService;
+import br.com.moneyflowauthorizer.dto.ClientDto;
+import br.com.moneyflowauthorizer.entity.ClientEntity;
+import br.com.moneyflowauthorizer.exeption.BusinessException;
+import br.com.moneyflowauthorizer.repository.ClientRepository;
+import br.com.moneyflowauthorizer.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
