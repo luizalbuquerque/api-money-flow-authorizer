@@ -1,14 +1,13 @@
-package br.com.internetbanking.service.impl;
+package br.com.moneyflowauthorizer.service.impl;
 
-import br.com.internetbanking.dto.TransactionDTO;
-import br.com.internetbanking.entity.ClientEntity;
-import br.com.internetbanking.entity.TransactionEntity;
-import br.com.internetbanking.enun.TransactionType;
-import br.com.internetbanking.exeption.BusinessException;
-import br.com.internetbanking.repository.ClientRepository;
-import br.com.internetbanking.repository.TransactionRepository;
-import br.com.internetbanking.service.TransactionService;
-import org.springframework.http.ResponseEntity;
+import br.com.moneyflowauthorizer.dto.TransactionDTO;
+import br.com.moneyflowauthorizer.entity.CardEntity;
+import br.com.moneyflowauthorizer.entity.TransactionEntity;
+import br.com.moneyflowauthorizer.enun.TransactionType;
+import br.com.moneyflowauthorizer.exeption.BusinessException;
+import br.com.moneyflowauthorizer.repository.CardRepository;
+import br.com.moneyflowauthorizer.repository.TransactionRepository;
+import br.com.moneyflowauthorizer.service.TransactionService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,61 +16,66 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private final ClientRepository clientRepository;
+    private final CardRepository cardRepository;
     private final TransactionRepository transactionRepository;
 
-    public TransactionServiceImpl(ClientRepository clientRepository, TransactionRepository transactionRepository) {
-        this.clientRepository = clientRepository;
+    public TransactionServiceImpl(CardRepository cardRepository, TransactionRepository transactionRepository) {
+        this.cardRepository = cardRepository;
         this.transactionRepository = transactionRepository;
     }
 
     public void newTransaction(TransactionDTO request) {
-        ClientEntity client = getClientByAccountNumber(request.getAccountNumber());
+        CardEntity card = getCardByNumberCard(request.getNumberCard());
 
         if (request.getType() == TransactionType.DEPOSIT) {
             // Transação de DEPÓSITO
-            updateClientBalance(client, request.getValue());
+            updateClientBalance(card, request.getValue());
         } else if (request.getType() == TransactionType.WITHDRAWAL) {
             // Transação de SAQUE
-            BigDecimal withdrawalAmount = calculateWithdrawalAmount(request.getValue(), client.isExecutivePlan());
-            updateClientBalance(client, withdrawalAmount.negate());
+            BigDecimal withdrawalAmount = calculateWithdrawalAmount(request.getValue());
+            BigDecimal currentBalance = card.getAmount();
+            if (withdrawalAmount.compareTo(currentBalance) > 0) {
+                throw new BusinessException("Saldo insuficiente para realizar o saque.");
+            }
+            updateClientBalance(card, withdrawalAmount.negate());
         } else {
             throw new IllegalArgumentException("Tipo de transação inválido.");
         }
 
-        TransactionEntity transaction = createTransaction(request, client);
+        TransactionEntity transaction = createTransaction(request, card);
         saveTransaction(transaction);
-        updateClientTransactionList(client, transaction);
+        updateClientTransactionList(card, transaction);
     }
 
-    private ClientEntity getClientByAccountNumber(String accountNumber) {
-        return clientRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Client not found."));
+    private CardEntity getCardByNumberCard(String numberCard) {
+        return cardRepository.findCardByNumberCard(numberCard)
+                .orElseThrow(() -> new IllegalArgumentException("Cartão de numero: " + numberCard +" não encontrado."));
     }
 
-    private void updateClientBalance(ClientEntity client, BigDecimal value) {
+
+    private void updateClientBalance(CardEntity client, BigDecimal value) {
         BigDecimal newBalance = client.getAmount().add(value);
         client.setAmount(newBalance);
     }
 
-    private TransactionEntity createTransaction(TransactionDTO request, ClientEntity client) {
+
+    private TransactionEntity createTransaction(TransactionDTO request, CardEntity card) {
         TransactionEntity transaction = new TransactionEntity();
         if(request.getTransactionType().equals(TransactionType.DEPOSIT)){
             transaction.setType(TransactionType.DEPOSIT);
             transaction.setValue(request.getValue());
             transaction.setTransactionDate(LocalDateTime.now());
-            transaction.setClient(client);
+            transaction.setCard(card);
             return transaction;
         }
         transaction.setType(TransactionType.WITHDRAWAL);
         transaction.setValue(request.getValue());
         transaction.setTransactionDate(LocalDateTime.now());
-        transaction.setClient(client);
+        transaction.setCard(card);
         return transaction;
     }
 
@@ -79,45 +83,27 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
     }
 
-    private void updateClientTransactionList(ClientEntity client, TransactionEntity transaction) {
+    private void updateClientTransactionList(CardEntity client, TransactionEntity transaction) {
         List<TransactionEntity> transactionList = client.getTransactions();
         if (transactionList == null) {
             transactionList = new ArrayList<>();
         }
         transactionList.add(transaction);
         client.setTransactions(transactionList);
-        clientRepository.save(client);
+        cardRepository.save(client);
     }
-
-    private BigDecimal calculateWithdrawalAmount(BigDecimal value, boolean isExecutivePlan) {
-        if (value.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("O valor do saque deve ser maior que zero.");
-        }
-
-        BigDecimal withdrawalAmount;
-        if (value.compareTo(BigDecimal.valueOf(100)) <= 0) {
-            // Valor <= 100,00: Isento de taxa
-            withdrawalAmount = value;
-        } else if (value.compareTo(BigDecimal.valueOf(300)) <= 0) {
-            // Valor > 100,00 e <= 300,00: Taxa de 0.4%
-            BigDecimal feePercentage = isExecutivePlan ? BigDecimal.ZERO : BigDecimal.valueOf(0.004);
-            BigDecimal feeAmount = value.multiply(feePercentage);
-            withdrawalAmount = value.subtract(feeAmount);
-        } else {
-            // Valor > 300,00: Taxa de 1%
-            BigDecimal feePercentage = isExecutivePlan ? BigDecimal.ZERO : BigDecimal.valueOf(0.01);
-            BigDecimal feeAmount = value.multiply(feePercentage);
-            withdrawalAmount = value.subtract(feeAmount);
-        }
-
-        return withdrawalAmount;
-    }
-
 
     public List<TransactionEntity> getTransactionsByDate(LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
         return transactionRepository.findByTransactionDateBetween(startOfDay, endOfDay);
+    }
+
+    private BigDecimal calculateWithdrawalAmount(BigDecimal value) {
+        if (value.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("O valor do saque deve ser maior que zero.");
+        }
+        return value;
     }
 
 }

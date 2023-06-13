@@ -1,22 +1,33 @@
 package br.com.moneyflowauthorizer.dto;
 
+import br.com.moneyflowauthorizer.enun.CardStatus;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.util.Date;
 
 
 @Data
-public class ClientDto {
+public class CardDto {
 
     private String name;
-    private Boolean executivePlan;
     private BigDecimal amount;
-    private String accountNumber;
+    private String numberCard;
+    private CardStatus status;
+    private  String password;
 
-    @DateTimeFormat
-    private Date birthday;
+    @CreationTimestamp
+    @Temporal( TemporalType.TIMESTAMP )
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Temporal( TemporalType.TIMESTAMP )
+    private Date updatedAt;
+
 
 
 }

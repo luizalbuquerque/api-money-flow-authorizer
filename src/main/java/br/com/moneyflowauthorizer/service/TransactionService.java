@@ -1,8 +1,7 @@
-package br.com.internetbanking.service;
+package br.com.moneyflowauthorizer.service;
 
-import br.com.internetbanking.dto.TransactionDTO;
-import br.com.internetbanking.entity.TransactionEntity;
-import org.springframework.http.ResponseEntity;
+import br.com.moneyflowauthorizer.dto.TransactionDTO;
+import br.com.moneyflowauthorizer.entity.TransactionEntity;
 
 import java.time.LocalDate;
 import java.util.List;

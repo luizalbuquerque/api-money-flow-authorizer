@@ -1,4 +1,4 @@
-package br.com.internetbanking;
+package br.com.moneyflowauthorizer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package br.com.internetbanking.enun;
+package br.com.moneyflowauthorizer.enun;
 
 
 

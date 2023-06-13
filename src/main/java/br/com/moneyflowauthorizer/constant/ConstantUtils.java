@@ -1,4 +1,4 @@
-package br.com.internetbanking.constant;
+package br.com.moneyflowauthorizer.constant;
 
 public class ConstantUtils {
 

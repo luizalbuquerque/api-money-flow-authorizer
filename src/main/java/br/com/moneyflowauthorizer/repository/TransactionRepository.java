@@ -1,7 +1,6 @@
-package br.com.internetbanking.repository;
+package br.com.moneyflowauthorizer.repository;
 
-import br.com.internetbanking.entity.ClientEntity;
-import br.com.internetbanking.entity.TransactionEntity;
+import br.com.moneyflowauthorizer.entity.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

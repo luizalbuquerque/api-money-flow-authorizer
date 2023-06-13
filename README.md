@@ -1,7 +1,7 @@
 
-# Internet Banking Santander
+# Money flow authorizer
 
-Projeto Internet Banking Santander
+Projeto money flow authorizer
 
 
 ## Tecnologias necessárias
@@ -12,12 +12,9 @@ Projeto Internet Banking Santander
 - Docker
 
 
-
-
-
 ## Inicializar docker
 
-Para inicializar docker, seu banco local, abra seu terminal de preferencia e aplique o comando na seguir na raiz do seu projeto \internet-banking.
+Para inicializar docker, seu banco local, abra seu terminal de preferencia e aplique o comando na seguir na raiz do seu projeto \investor-banking.
 
 ```bash
   docker compose up
@@ -39,18 +36,8 @@ Para inicializar docker, seu banco local, abra seu terminal de preferencia e apl
 #### Você ver se a aplicação está de pé usando Health Checker.
 
 ```http
-  http://localhost:8080/api-internet-banking/health-check
+  http://localhost:8080/api/money-flow-authorizer/health-check
 ```
-
-
-
-
-
-
-
-
-
-
 
 ## Código de conduta
 

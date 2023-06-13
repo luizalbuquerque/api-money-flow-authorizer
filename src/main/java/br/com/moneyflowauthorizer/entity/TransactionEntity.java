@@ -1,13 +1,13 @@
-package br.com.internetbanking.entity;
+package br.com.moneyflowauthorizer.entity;
 
-import br.com.internetbanking.enun.TransactionType;
+import br.com.moneyflowauthorizer.enun.TransactionType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,9 +28,9 @@ public class TransactionEntity {
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
-    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private ClientEntity client;
+    @JoinColumn(name = "card_id", nullable = false)
+    private CardEntity card;
+
 
 }

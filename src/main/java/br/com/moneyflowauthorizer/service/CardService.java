@@ -5,17 +5,21 @@ import br.com.moneyflowauthorizer.entity.CardEntity;
 import br.com.moneyflowauthorizer.repository.CardRepository;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
+
 public interface CardService {
 
-        void createClient(CardDto userDto);
+        void createCard(CardDto userDto);
 
         ResponseEntity<CardEntity> findUserById(Long id);
+
+        ResponseEntity<BigDecimal> getAmount(Long id);
 
         ResponseEntity<String> updateCustumerById(CardDto form, Long id);
 
         ResponseEntity<String>  deleteById(Long id);
 
-        void isExistentClient(CardRepository cardRepository, CardDto cardDto);
+        void isExistentCard(CardRepository cardRepository, CardDto cardDto);
 
 
 }

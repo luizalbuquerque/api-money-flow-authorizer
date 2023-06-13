@@ -1,4 +1,4 @@
-package br.com.internetbanking.exeption;
+package br.com.moneyflowauthorizer.exeption;
 
 public class BusinessException extends RuntimeException {
 

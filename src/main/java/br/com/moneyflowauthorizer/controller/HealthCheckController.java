@@ -1,4 +1,4 @@
-package br.com.internetbanking.controller;
+package br.com.moneyflowauthorizer.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthCheckController {
 
-    @RequestMapping(value = "/internet-banking/health-check", method = RequestMethod.GET, produces = { "application/json"})
+    @RequestMapping(value = "/api/money-flow-authorizer/health-check", method = RequestMethod.GET, produces = { "application/json"})
     @Operation(description = "Request to intercept" , responses = {
             @ApiResponse(description = "Request has been forwarded", responseCode = "200", content = @Content(mediaType = "application/json")),
             @ApiResponse(description = "There was an error forwarding the request", responseCode = "500")})
     public ResponseEntity<String> HealthCheck() {
-        return new ResponseEntity<>("I'm alive - Internet Banking SANTANDER!!!", HttpStatus.OK);
+        return new ResponseEntity<>("I'm alive - Api money-flow-authorizer!!!", HttpStatus.OK);
     }
 
 }

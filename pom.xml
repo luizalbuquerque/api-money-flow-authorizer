@@ -11,10 +11,10 @@
 	</parent>
 
 	<groupId>br.com.mv</groupId>
-	<artifactId>internet-banking</artifactId>
+	<artifactId>api-money-flow-authorizer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>internet-banking</name>
-	<description>Projeto Internet Banking Santander</description>
+	<name>money-flow-authorizer</name>
+	<description>Money Flow Authorizer</description>
 
 	<properties>
 		<java.version>1.8</java.version>
